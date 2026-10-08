@@ -238,10 +238,11 @@ export default function Hero() {
               rel="noreferrer"
               tabIndex={index === 1 ? 0 : -1}
               aria-label={`${hero.guia.cta}: capa do guia`}
-              className="s-fade group relative block aspect-[917/1281] w-[clamp(100px,17svh,150px)] justify-self-start transition-transform duration-700 ease-[var(--ease-out-expo)] hover:-translate-y-2 hover:rotate-[-2deg] md:hidden [@media(max-width:767px)_and_(max-height:719px)]:hidden lg:col-span-5 lg:block lg:w-[min(30vw,calc((100svh-280px)*0.716))] lg:max-w-[460px]"
+              className="s-fade group relative block aspect-[917/1281] w-[clamp(72px,calc((100svh-560px)*0.716),150px)] justify-self-start transition-transform duration-700 ease-[var(--ease-out-expo)] hover:-translate-y-2 hover:rotate-[-2deg] md:hidden lg:col-span-5 lg:block lg:w-[min(30vw,calc((100svh-280px)*0.716))] lg:max-w-[460px]"
             >
               <Image
                 src="/images/guia-livro.webp"
+                loading="eager"
                 alt="Guia definitivo para contratação de fretamento corporativo, em PDF"
                 fill
                 sizes="(min-width: 1024px) 30vw, 150px"
