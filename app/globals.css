@@ -1,0 +1,335 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #00154d;
+  --color-navy-2: #00245b;
+  --color-navy-3: #0a2a6b;
+  --color-teal: #22af9e;
+  --color-teal-2: #1b9688;
+  --color-azul: #007aff;
+  --color-cinza: #ededed;
+  --color-nevoa: #f5f6f8;
+  --color-tinta: #23282d;
+
+  --font-sans: var(--font-aconchego), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 40s) linear infinite;
+
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes marquee-reverse {
+    from { transform: translate3d(-50%, 0, 0); }
+    to { transform: translate3d(0, 0, 0); }
+  }
+}
+
+:root {
+  --gutter: clamp(1rem, 3.2vw, 3rem);
+  --header-h: 84px;
+}
+
+html {
+  background: var(--color-navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: #fff;
+  color: var(--color-navy);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-teal);
+  color: #fff;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Enquanto o preloader roda, nada rola. */
+html.is-loading,
+html.is-loading body { overflow: hidden; }
+
+.wrap {
+  width: 100%;
+  padding-inline: var(--gutter);
+  margin-inline: auto;
+  max-width: 1680px;
+}
+
+@layer components {
+/* Botões ------------------------------------------------------------------ */
+.btn {
+  --btn-bg: var(--color-teal);
+  --btn-fg: #fff;
+  --btn-fill: var(--color-navy);
+  --btn-fill-fg: #fff;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 3.5rem;
+  padding-inline: 1.6rem 0.45rem;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: color 0.5s var(--ease-out-expo);
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-fill);
+  border-radius: inherit;
+  transform: translateY(101%);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.btn:hover::before,
+.btn:focus-visible::before { transform: translateY(0); }
+.btn:hover,
+.btn:focus-visible { color: var(--btn-fill-fg); }
+.btn .btn-label {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.2;
+}
+.btn .btn-label > span { display: block; transition: transform 0.6s var(--ease-out-expo); }
+.btn .btn-label > span + span { position: absolute; inset: 0; transform: translateY(110%); }
+.btn:hover .btn-label > span:first-child { transform: translateY(-110%); }
+.btn:hover .btn-label > span + span { transform: translateY(0); }
+.btn .btn-icon {
+  display: grid;
+  place-items: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-navy);
+  overflow: hidden;
+  transition: transform 0.6s var(--ease-out-expo), background-color 0.4s;
+}
+.btn:hover .btn-icon { transform: rotate(-45deg); background: var(--color-teal); color: #fff; }
+
+.btn-light { --btn-bg: #fff; --btn-fg: var(--color-navy); --btn-fill: var(--color-teal); }
+.btn-light .btn-icon { background: var(--color-navy); color: #fff; }
+.btn-navy { --btn-bg: var(--color-navy); --btn-fill: var(--color-teal); }
+.btn-ghost {
+  --btn-bg: transparent;
+  --btn-fg: currentColor;
+  --btn-fill: #fff;
+  --btn-fill-fg: var(--color-navy);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, currentColor 35%, transparent);
+}
+
+/* Círculo com seta (cards) */
+.arrow-circle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  transition:
+    background-color 0.5s var(--ease-out-expo),
+    color 0.5s var(--ease-out-expo),
+    border-color 0.5s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+}
+.group:hover .arrow-circle {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+  color: #fff;
+  transform: rotate(-45deg);
+}
+
+/* Link com sublinhado animado */
+.link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-out-expo);
+}
+.link-line:hover,
+.link-line:focus-visible {
+  background-size: 100% 1px;
+  background-position: 0% 100%;
+}
+
+/* Texto que "rola" no hover */
+.roll { position: relative; display: inline-block; overflow: hidden; vertical-align: top; }
+.roll > span { display: block; transition: transform 0.55s var(--ease-out-expo); }
+.roll > span + span { position: absolute; inset: 0; transform: translateY(105%); }
+.group:hover .roll > span:first-child,
+.roll:hover > span:first-child { transform: translateY(-105%); }
+.group:hover .roll > span + span,
+.roll:hover > span + span { transform: translateY(0); }
+
+/* Eyebrow com ponto teal */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-teal);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-teal) 22%, transparent);
+}
+
+/* Linhas de rota (fundo) */
+.route-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2.6s var(--ease-in-out-quart);
+}
+.routes-in .route-path { stroke-dashoffset: 0; }
+/* Linhas mais discretas na área útil (1280px centrais), mais presentes nas laterais */
+.route-lines {
+  --route-center: 0.35;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0,
+    #000 calc(50% - 760px),
+    rgb(0 0 0 / var(--route-center)) calc(50% - 600px),
+    rgb(0 0 0 / var(--route-center)) calc(50% + 600px),
+    #000 calc(50% + 760px),
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0,
+    #000 calc(50% - 760px),
+    rgb(0 0 0 / var(--route-center)) calc(50% - 600px),
+    rgb(0 0 0 / var(--route-center)) calc(50% + 600px),
+    #000 calc(50% + 760px),
+    #000 100%
+  );
+}
+/* Variante do hero: no desktop as linhas somem à esquerda (atrás do texto) e ficam inteiras à direita */
+@media (min-width: 1024px) {
+  .route-lines.route-fade-left {
+    -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.03) 0%, rgb(0 0 0 / 0.08) 35%, #000 85%);
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.03) 0%, rgb(0 0 0 / 0.08) 35%, #000 85%);
+  }
+}
+.route-comet {
+  stroke-dasharray: 0.07 0.93;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation-name: route-travel;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+  transition: opacity 1.2s ease calc(var(--route-delay, 0s) + 2.2s);
+}
+.routes-in .route-comet { opacity: 1; animation-play-state: running; }
+.route-lines[data-visible="false"] .route-comet,
+.route-lines[data-visible="false"] .route-pulse { animation-play-state: paused; }
+@keyframes route-travel {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.route-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition: transform 0.7s var(--ease-out-expo);
+}
+.routes-in .route-dot { transform: scale(1); }
+.route-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: route-pulse 2.8s var(--ease-out-expo) infinite;
+}
+@keyframes route-pulse {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+/* Placeholder de imagem */
+.ph {
+  --ph-a: var(--color-navy-2);
+  --ph-b: var(--color-navy);
+  --ph-line: rgb(255 255 255 / 0.07);
+  --ph-fg: rgb(255 255 255 / 0.75);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 85% 10%, color-mix(in oklab, var(--color-teal) 26%, transparent), transparent 55%),
+    linear-gradient(160deg, var(--ph-a), var(--ph-b));
+  color: var(--ph-fg);
+}
+.ph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--ph-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ph-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+}
+.ph-teal { --ph-a: #2bc2b0; --ph-b: var(--color-teal-2); --ph-line: rgb(255 255 255 / 0.12); }
+.ph-light {
+  --ph-a: #f3f5f8;
+  --ph-b: #e3e8ef;
+  --ph-line: rgb(0 21 77 / 0.06);
+  --ph-fg: rgb(0 21 77 / 0.6);
+}
+
+@keyframes scrollcue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+@keyframes progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Máscara de esmaecimento para o marquee */
+.fade-x {
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
